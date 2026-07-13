@@ -209,7 +209,8 @@ export function getCharacterSprite(characterId: string, outfit: OutfitType = 'de
   const folderName = CHARACTER_ID_MAP[characterId] || characterId;
   const sprites = SPRITE_PATHS[folderName];
   if (!sprites) return '';
-  return sprites[outfit] || sprites.default || '';
+  const path = sprites[outfit] || sprites.default || '';
+  return path ? process.env.PUBLIC_URL + path : '';
 }
 
 /**
@@ -218,7 +219,8 @@ export function getCharacterSprite(characterId: string, outfit: OutfitType = 'de
  * @returns 图片路径，如果不存在返回空字符串
  */
 export function getBackgroundImage(backgroundId: string): string {
-  return BACKGROUND_IMAGES[backgroundId] || '';
+  const path = BACKGROUND_IMAGES[backgroundId] || '';
+  return path ? process.env.PUBLIC_URL + path : '';
 }
 
 /**
