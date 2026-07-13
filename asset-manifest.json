@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/magic-academy-vn/static/css/main.ea81e981.css",
-    "main.js": "/magic-academy-vn/static/js/main.f9585a1f.js",
+    "main.js": "/magic-academy-vn/static/js/main.079916ea.js",
     "index.html": "/magic-academy-vn/index.html",
     "main.ea81e981.css.map": "/magic-academy-vn/static/css/main.ea81e981.css.map",
-    "main.f9585a1f.js.map": "/magic-academy-vn/static/js/main.f9585a1f.js.map"
+    "main.079916ea.js.map": "/magic-academy-vn/static/js/main.079916ea.js.map"
   },
   "entrypoints": [
     "static/css/main.ea81e981.css",
-    "static/js/main.f9585a1f.js"
+    "static/js/main.079916ea.js"
   ]
 }
