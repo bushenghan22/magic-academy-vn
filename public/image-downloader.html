@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎨 GalGame 图片自动生成器</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2e 100%);
+  min-height: 100vh;
+  color: #e0e0ff;
+  padding: 20px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #ff6b9d, #c44dff, #4dc9ff, #4dff9f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  text-shadow: 0 0 40px rgba(196, 77, 255, 0.3);
+}
+.subtitle {
+  text-align: center;
+  color: #8888bb;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+.control-panel {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(196, 77, 255, 0.3);
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 25px;
+  backdrop-filter: blur(10px);
+}
+.progress-section { margin-bottom: 20px; }
+.progress-bar-container {
+  width: 100%;
+  height: 30px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(77, 201, 255, 0.3);
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4dc9ff, #c44dff, #ff6b9d);
+  width: 0%;
+  transition: width 0.5s ease;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+.status-text {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: #a0a0ff;
+}
+.btn-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+button {
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn-start {
+  background: linear-gradient(135deg, #4dff9f, #4dc9ff);
+  color: #0a0a1a;
+  box-shadow: 0 4px 20px rgba(77, 255, 159, 0.4);
+}
+.btn-start:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(77, 255, 159, 0.6);
+}
+.btn-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-stop {
+  background: linear-gradient(135deg, #ff6b6b, #ff4d9d);
+  color: white;
+  box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+.image-card {
+  background: rgba(255,255,255,0.03);
+  border: 2px solid rgba(100,100,150,0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.image-card.pending { border-color: rgba(100,100,150,0.3); }
+.image-card.loading { border-color: #ffcc00; box-shadow: 0 0 20px rgba(255,204,0,0.3); }
+.image-card.done { border-color: #4dff9f; box-shadow: 0 0 20px rgba(77,255,159,0.3); }
+.image-card.error { border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255,77,77,0.3); }
+.image-preview {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.image-preview.bg-preview { aspect-ratio: 16/9; }
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.image-info {
+  padding: 12px;
+}
+.image-name {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.image-status {
+  font-size: 0.8rem;
+  color: #888;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255,204,0,0.2);
+  border-top-color: #ffcc00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.section-title {
+  font-size: 1.5rem;
+  margin: 30px 0 15px;
+  color: #c44dff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.log-panel {
+  background: rgba(0,0,0,0.4);
+  border-radius: 12px;
+  padding: 15px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+  margin-top: 20px;
+  border: 1px solid rgba(100,100,150,0.2);
+}
+.log-entry { padding: 3px 0; }
+.log-entry.success { color: #4dff9f; }
+.log-entry.error { color: #ff6b6b; }
+.log-entry.info { color: #4dc9ff; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎨 星辉魔法学院 - 图片自动生成器</h1>
+  <p class="subtitle">全自动生成 12张角色立绘 + 7张场景背景图</p>
+
+  <div class="control-panel">
+    <div class="progress-section">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+      </div>
+      <div class="status-text" id="statusText">准备就绪，点击「开始生成」按钮</div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-start" id="startBtn" onclick="startGeneration()">🚀 开始自动生成所有图片</button>
+      <button class="btn-stop" id="stopBtn" onclick="stopGeneration()" style="display:none">⏹ 停止</button>
+    </div>
+    <div class="log-panel" id="logPanel"></div>
+  </div>
+
+  <h2 class="section-title">👧 角色立绘 (12张)</h2>
+  <div class="grid" id="characterGrid"></div>
+
+  <h2 class="section-title">🏞️ 场景背景 (7张)</h2>
+  <div class="grid" id="backgroundGrid"></div>
+</div>
+
+<script>
+const IMAGE_API = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image';
+
+function buildCharacterPrompt(desc) {
+  return `masterpiece, best quality, ultra-detailed, anime visual novel sprite, bishoujo game art style, 1girl, solo, ${desc}, full body, standing, white background, studio lighting, beautiful detailed face, beautiful detailed eyes, perfect anatomy, no text, no watermark`;
+}
+
+function buildBackgroundPrompt(desc) {
+  return `masterpiece, best quality, ultra-detailed, anime visual novel background, scenic background, no humans, ${desc}, beautiful lighting, cinematic composition, detailed environment, atmospheric perspective, rich colors, no text, no watermark`;
+}
+
+const IMAGES = [
+  {
+    category: 'character', folder: 'sakura', name: '星野樱 - 制服',
+    file: 'default.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('bright cheerful pink long hair, slightly wavy ends, cute ahoge on top, large sparkling sky blue eyes, warm energetic smile, open mouth laughing, wearing dark blue magic academy uniform, white dress shirt, dark blue pleated skirt, red ribbon bow tie, black thighhighs, brown loafers, gold star badge on chest, waving hand energetically, sunny optimistic personality, soft pink lips, fair skin')
+  },
+  {
+    category: 'character', folder: 'sakura', name: '星野樱 - 战斗服',
+    file: 'battle.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('bright pink long hair flowing dynamically in wind, determined confident eyes, wearing pink and white magical girl battle outfit, frills and star decorations, glowing magical runes on fabric, holding a glowing pink magic orb in hand, combat ready stance, sparkles and star particles surrounding her, glowing aura, heroic expression, magical girl aesthetic, ribbons flowing')
+  },
+  {
+    category: 'character', folder: 'suzu', name: '风铃铃 - 制服',
+    file: 'default.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('soft dark purple bob cut hair to shoulders, wearing thin rimmed glasses, gentle lavender eyes, shy timid expression, slightly blushing cheeks, looking down modestly, wearing dark blue magic academy uniform, holding a large thick ancient magic book close to chest, slightly bowing posture, quiet introverted bookworm personality, soft gentle features, fair skin, cute nerdy girl')
+  },
+  {
+    category: 'character', folder: 'suzu', name: '风铃铃 - 战斗服',
+    file: 'battle.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('dark purple short hair flowing, glasses reflecting intelligent light, focused serious eyes, wearing purple and white long magic robe with hood down, covered in ancient glowing magic runes and symbols, multiple floating magic books surrounding her, magic circle glowing beneath feet, pages flipping in air, wise mysterious sage aesthetic, scholarly powerful aura')
+  },
+  {
+    category: 'character', folder: 'rin', name: '岸岛凛 - 制服',
+    file: 'default.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('sharp silver white high ponytail, fierce golden orange eyes, tsundere expression, blushing cheeks while looking away haughtily, arms crossed under chest, wearing dark blue magic academy uniform, ornate decorative sword at waist, cold proud personality, beautiful sharp features, elegant yet stubborn, fair skin, elegant posture, honor student')
+  },
+  {
+    category: 'character', folder: 'rin', name: '岸岛凛 - 战斗服',
+    file: 'battle.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('silver white ponytail flowing in battle wind, sharp piercing eyes, wearing silver and dark blue knight-style battle outfit, metal shoulder armor and gauntlets, holding a glowing enchanted magic sword in hand, wind attribute light effects on blade, sword aura surrounding her, combat stance, cool beautiful warrior maiden, sparks and wind particles')
+  },
+  {
+    category: 'character', folder: 'aoi', name: '石上葵 - 制服',
+    file: 'default.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('soft wavy sky blue long hair, mature gentle emerald green eyes, warm kind motherly smile, gentle caring expression, wearing dark blue magic academy uniform with a light cream cardigan over it, reaching out hand gently, mature elegant onee-san type, soft warm features, tender personality, fair skin, comforting presence')
+  },
+  {
+    category: 'character', folder: 'aoi', name: '石上葵 - 战斗服',
+    file: 'battle.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('sky blue long hair flowing like water, gentle yet determined eyes, wearing blue and white healer-style magical outfit with light blue ribbons, hands glowing with warm healing golden light, water droplets and light particles floating around, soft halo behind her, holy gentle priestess aesthetic, warm healing aura')
+  },
+  {
+    category: 'character', folder: 'yuzu', name: '天音柚子 - 制服',
+    file: 'default.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('playful bright orange twin tails with pink dip-dye ends, large mischievous yellow green cat eyes, cheeky expression sticking tongue out, doing playful peace sign, wearing dark blue magic academy uniform messily, collar unbuttoned, sleeves rolled up, mismatched socks, little devil prankster personality, energetic playful, cute troublemaker, fair skin')
+  },
+  {
+    category: 'character', folder: 'yuzu', name: '天音柚子 - 战斗服',
+    file: 'battle.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('orange twin tails bouncing with energy, mischievous excited eyes, wearing orange and black punk-style magical outfit with lightning bolt decorations, holding two glowing magical wands, electric sparks and energy balls around her, dynamic action pose, playful yet powerful, little devil battle aura, lightning effects')
+  },
+  {
+    category: 'character', folder: 'mashiro', name: '白石真白 - 制服',
+    file: 'default.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('elegant pure white long straight hair reaching waist, cold ice blue narrow phoenix eyes, expressionless cool face, porcelain fair skin, wearing perfectly pressed dark blue magic academy uniform immaculately, standing elegantly with cold demeanor, looking down coldly, high class ojou-sama vibe, ice queen kuudere personality, beautiful flawless features, regal posture')
+  },
+  {
+    category: 'character', folder: 'mashiro', name: '白石真白 - 战斗服',
+    file: 'battle.jpg', size: 'portrait_4_3',
+    prompt: buildCharacterPrompt('white long hair flowing in magical energy, cold sharp piercing eyes, wearing white and gold elaborate magical gown with ice crystal decorations and delicate lace trims, ice crystals and snowflakes floating around, freezing effect on ground, powerful ice blue magic forming in hands, cold beautiful queen aesthetic, frost and snow aura')
+  },
+  {
+    category: 'background', folder: '', name: '魔法学院大门',
+    file: 'academy_gate.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('magnificent grand European-style magic academy main gate, towering stone pillars carved with complex magical runes glowing faintly blue, ornate iron gate, ancient magical text on archway, wide stone steps, magic lamp posts, lush green trees, clear blue sky with white clouds, bright warm sunlight, solemn mysterious fantasy atmosphere, daytime')
+  },
+  {
+    category: 'background', folder: '', name: '魔法教室',
+    file: 'classroom.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('spacious bright magic classroom interior, neat rows of wooden desks and chairs, each desk has crystal ball magic wand quill, blackboard with magic spells and circle diagrams, glowing floating magic crystal ball, large windows showing courtyard and blue sky, warm beige stone walls, bookshelves with ancient magic books, sunbeams through windows, warm cozy study atmosphere')
+  },
+  {
+    category: 'background', folder: '', name: '图书馆',
+    file: 'library.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('huge ancient magical library interior, towering bookshelves reaching ceiling filled with colorful ancient magic books, some books glowing faintly, tall stained glass windows casting colorful light beams, leather sofas and wooden desks, books floating in air turning pages, warm magic lamp lighting, ladder against bookshelf, quiet mysterious scholarly atmosphere')
+  },
+  {
+    category: 'background', folder: '', name: '魔法森林',
+    file: 'forest.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('mysterious enchanted magic forest, tall ancient trees with thick trunks, dense canopy, dreamy blue-green leaves, bioluminescent trees, ground covered with moss and glowing mushrooms, winding path, dappled sunlight, tiny glowing fairies floating, mist in distance, gentle stream, mysterious dreamy atmosphere')
+  },
+  {
+    category: 'background', folder: '', name: '学院食堂',
+    file: 'cafeteria.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('spacious lively academy cafeteria dining hall, long tables with clean tablecloths, various foods on counter: bread fruits soups desserts, high ceiling with magic chandeliers, large windows showing courtyard, warm lively atmosphere, bright lunchtime lighting, warm color tones, cozy inviting')
+  },
+  {
+    category: 'background', folder: '', name: '学生宿舍',
+    file: 'dormitory.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('cozy cute girls dormitory bedroom, two beds with cute sheets and plush toys, desks with books desk lamp photo frames, small balcony with starry sky visible, posters on wall, magical trinkets, soft carpet, wardrobe with uniforms, warm girly arrangement, warm soft night lighting, yellow lamp glow')
+  },
+  {
+    category: 'background', folder: '', name: '璀璨星空',
+    file: 'night_sky.jpg', size: 'landscape_16_9',
+    prompt: buildBackgroundPrompt('magnificent brilliant starry night sky, countless bright stars twinkling in deep dark blue-black sky, Milky Way clearly visible, shooting stars, silhouette of academy buildings with magic tower spires below, distant mountain silhouettes, fireflies dancing over grass, romantic dreamy atmosphere, spectacular starlight')
+  }
+];
+
+let isRunning = false;
+let shouldStop = false;
+let completedCount = 0;
+
+function log(msg, type = 'info') {
+  const panel = document.getElementById('logPanel');
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${type}`;
+  entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  panel.appendChild(entry);
+  panel.scrollTop = panel.scrollHeight;
+}
+
+function createCards() {
+  const charGrid = document.getElementById('characterGrid');
+  const bgGrid = document.getElementById('backgroundGrid');
+  
+  IMAGES.forEach((img, idx) => {
+    const card = document.createElement('div');
+    card.className = 'image-card pending';
+    card.id = `card-${idx}`;
+    
+    const preview = document.createElement('div');
+    preview.className = `image-preview ${img.category === 'background' ? 'bg-preview' : ''}`;
+    preview.id = `preview-${idx}`;
+    preview.innerHTML = '⏳';
+    
+    const info = document.createElement('div');
+    info.className = 'image-info';
+    info.innerHTML = `
+      <div class="image-name">${img.name}</div>
+      <div class="image-status" id="status-${idx}">等待中...</div>
+    `;
+    
+    card.appendChild(preview);
+    card.appendChild(info);
+    
+    if (img.category === 'character') {
+      charGrid.appendChild(card);
+    } else {
+      bgGrid.appendChild(card);
+    }
+  });
+}
+
+function updateProgress() {
+  const percent = Math.round((completedCount / IMAGES.length) * 100);
+  document.getElementById('progressBar').style.width = percent + '%';
+  document.getElementById('progressBar').textContent = percent + '%';
+  document.getElementById('statusText').textContent = `进度: ${completedCount} / ${IMAGES.length}`;
+}
+
+async function loadImage(url, idx) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    const timeout = setTimeout(() => reject(new Error('Timeout')), 60000);
+    
+    img.onload = () => {
+      clearTimeout(timeout);
+      resolve(img);
+    };
+    img.onerror = () => {
+      clearTimeout(timeout);
+      reject(new Error('Load failed'));
+    };
+    img.src = url;
+  });
+}
+
+async function downloadImage(imgUrl, filename) {
+  try {
+    const a = document.createElement('a');
+    a.href = imgUrl;
+    a.download = filename;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return true;
+  } catch(e) {
+    console.error('Download failed:', e);
+    return false;
+  }
+}
+
+async function generateOne(imgConfig, idx) {
+  const card = document.getElementById(`card-${idx}`);
+  const preview = document.getElementById(`preview-${idx}`);
+  const statusEl = document.getElementById(`status-${idx}`);
+  
+  card.className = 'image-card loading';
+  preview.innerHTML = '<div class="spinner"></div>';
+  statusEl.textContent = '生成中...';
+  log(`正在生成: ${imgConfig.name}`, 'info');
+  
+  try {
+    const url = `${IMAGE_API}?prompt=${encodeURIComponent(imgConfig.prompt)}&image_size=${imgConfig.size}`;
+    
+    const image = await loadImage(url, idx);
+    
+    preview.innerHTML = '';
+    preview.appendChild(image);
+    
+    card.className = 'image-card done';
+    statusEl.textContent = '✓ 完成';
+    
+    await downloadImage(url, imgConfig.file);
+    
+    completedCount++;
+    updateProgress();
+    log(`✓ ${imgConfig.name} 完成`, 'success');
+    
+    await new Promise(r => setTimeout(r, 2000));
+    return true;
+  } catch(err) {
+    card.className = 'image-card error';
+    preview.innerHTML = '❌';
+    statusEl.textContent = '失败，重试中...';
+    log(`✗ ${imgConfig.name} 失败: ${err.message}，重试...`, 'error');
+    
+    await new Promise(r => setTimeout(r, 3000));
+    
+    try {
+      const url = `${IMAGE_API}?prompt=${encodeURIComponent(imgConfig.prompt)}&image_size=${imgConfig.size}`;
+      const image = await loadImage(url, idx);
+      preview.innerHTML = '';
+      preview.appendChild(image);
+      card.className = 'image-card done';
+      statusEl.textContent = '✓ 完成';
+      await downloadImage(url, imgConfig.file);
+      completedCount++;
+      updateProgress();
+      log(`✓ ${imgConfig.name} 重试成功`, 'success');
+      await new Promise(r => setTimeout(r, 2000));
+      return true;
+    } catch(e2) {
+      card.className = 'image-card error';
+      preview.innerHTML = '❌';
+      statusEl.textContent = '失败 (已重试)';
+      log(`✗ ${imgConfig.name} 最终失败`, 'error');
+      completedCount++;
+      updateProgress();
+      return false;
+    }
+  }
+}
+
+async function startGeneration() {
+  if (isRunning) return;
+  isRunning = true;
+  shouldStop = false;
+  completedCount = 0;
+  
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('stopBtn').style.display = 'block';
+  
+  log('=== 开始批量生成图片 ===', 'info');
+  updateProgress();
+  
+  for(let i = 0; i < IMAGES.length; i++) {
+    if(shouldStop) {
+      log('用户停止生成', 'info');
+      break;
+    }
+    await generateOne(IMAGES[i], i);
+  }
+  
+  isRunning = false;
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('statusText').textContent = shouldStop ? '已停止' : `全部完成！共生成 ${completedCount} 张图片`;
+  log(`=== ${shouldStop ? '已停止' : '全部完成'} ===`, shouldStop ? 'error' : 'success');
+}
+
+function stopGeneration() {
+  shouldStop = true;
+  log('正在停止...', 'info');
+}
+
+createCards();
+updateProgress();
+log('图片生成器已就绪', 'success');
+</script>
+</body>
+</html>

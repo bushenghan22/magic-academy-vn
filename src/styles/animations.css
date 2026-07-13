@@ -1,0 +1,504 @@
+/* ============================================================
+   星辉魔法学院 - CSS 动画样式
+   包含入场、魔法效果、战斗、文字、卡牌等动画
+   ============================================================ */
+
+/* ==================== 基础入场动画 ==================== */
+
+/* 淡入 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 从下方滑入 */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 从上方滑入 */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 从左侧滑入 */
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 从右侧滑入 */
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 缩放进入 */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 弹性缩放进入 */
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 淡出 */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ==================== 魔法效果动画 ==================== */
+
+/* 星星闪烁 */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+/* 脉冲发光 */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+/* 持续发光 */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 223, 100, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 223, 100, 0.8), 0 0 40px rgba(255, 223, 100, 0.4); }
+}
+
+/* 旋转 */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 浮动效果 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 魔法阵旋转 */
+@keyframes magicCircle {
+  from { transform: rotate(0deg) scale(1); opacity: 0.8; }
+  50% { transform: rotate(180deg) scale(1.1); opacity: 1; }
+  to { transform: rotate(360deg) scale(1); opacity: 0.8; }
+}
+
+/* 魔法粒子飘散 */
+@keyframes particleFloat {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx, 50px), var(--ty, -100px)) scale(0); }
+}
+
+/* ==================== 战斗动画 ==================== */
+
+/* 震动效果 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* 闪光效果 */
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 受伤闪红 */
+@keyframes damageFlash {
+  0% { background-color: transparent; }
+  25% { background-color: rgba(255, 0, 0, 0.3); }
+  50% { background-color: transparent; }
+  75% { background-color: rgba(255, 0, 0, 0.15); }
+  100% { background-color: transparent; }
+}
+
+/* 治疗发光 */
+@keyframes healGlow {
+  0% { box-shadow: 0 0 0 rgba(100, 255, 100, 0); }
+  50% { box-shadow: 0 0 30px rgba(100, 255, 100, 0.6), 0 0 60px rgba(100, 255, 100, 0.3); }
+  100% { box-shadow: 0 0 0 rgba(105, 255, 100, 0); }
+}
+
+/* 攻击挥砍 */
+@keyframes slash {
+  0% { transform: translateX(-100%) rotate(-45deg); opacity: 0; }
+  50% { transform: translateX(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateX(100%) rotate(45deg); opacity: 0; }
+}
+
+/* 爆炸效果 */
+@keyframes explode {
+  0% { transform: scale(0); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* 生命条变化 */
+@keyframes hpChange {
+  0% { transform: scaleX(1); }
+  50% { transform: scaleX(0.95); }
+  100% { transform: scaleX(1); }
+}
+
+/* ==================== 文字动画 ==================== */
+
+/* 打字机光标闪烁 */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 文字闪烁流光 */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* 文字抖动 */
+@keyframes textShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* 文字弹跳 */
+@keyframes textBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ==================== 卡牌动画 ==================== */
+
+/* 抽牌动画 */
+@keyframes cardDraw {
+  0% { transform: translateX(200px) translateY(-100px) rotate(20deg) scale(0.5); opacity: 0; }
+  100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); opacity: 1; }
+}
+
+/* 出牌动画 */
+@keyframes cardPlay {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-200px) scale(1.2); }
+  100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+}
+
+/* 弃牌动画 */
+@keyframes cardDiscard {
+  0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateX(-200px) translateY(50px) rotate(-30deg); opacity: 0; }
+}
+
+/* 卡牌悬浮 */
+@keyframes cardHover {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+/* 卡牌翻转 */
+@keyframes cardFlip {
+  0% { transform: perspective(800px) rotateY(0deg); }
+  100% { transform: perspective(800px) rotateY(180deg); }
+}
+
+/* ==================== 角色立绘微动画 ==================== */
+
+/* 呼吸：轻微上下 + 缩放 */
+@keyframes spriteBreathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.012); }
+}
+
+/* 眨眼：用 scaleY 压缩再恢复 */
+@keyframes spriteBlink {
+  0%, 100% { transform: scaleY(1); }
+  45% { transform: scaleY(1); }
+  55% { transform: scaleY(0.06); }
+}
+
+/* 待机晃动：极轻微左右偏移 */
+@keyframes spriteIdle {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1.5px); }
+  75% { transform: translateX(1.5px); }
+}
+
+/* 角色底层持续待机：呼吸 + 微晃 */
+@keyframes spriteIdleBase {
+  0%, 100% { transform: translateY(0) scale(1) translateX(0); }
+  25% { transform: translateY(-2px) scale(1.005) translateX(-1px); }
+  50% { transform: translateY(-6px) scale(1.01) translateX(0); }
+  75% { transform: translateY(-2px) scale(1.005) translateX(1px); }
+}
+
+/* 角色情绪晃动：紧张/生气时抖动 */
+@keyframes spriteEmotionShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px) rotate(-0.5deg); }
+  40% { transform: translateX(2px) rotate(0.5deg); }
+  60% { transform: translateX(-1.5px) rotate(-0.3deg); }
+  80% { transform: translateX(1.5px) rotate(0.3deg); }
+}
+
+/* ==================== 场景转场动画 ==================== */
+
+/* 渐变过渡 */
+@keyframes sceneFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ==================== 视差背景动画 ==================== */
+
+/* 远景光斑缓慢漂移 */
+@keyframes driftSlow {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  33% { transform: translate(30px, -20px) scale(1.1); opacity: 1; }
+  66% { transform: translate(-20px, 25px) scale(0.95); opacity: 0.85; }
+}
+
+/* 前景微粒漂浮 */
+@keyframes dustFloat {
+  0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+  25% { transform: translate(15px, -10px); opacity: 0.6; }
+  50% { transform: translate(-10px, -20px); opacity: 0.4; }
+  75% { transform: translate(20px, -5px); opacity: 0.7; }
+}
+
+/* 擦除过渡 - 从左到右 */
+@keyframes wipeLeftToRight {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* 擦除过渡 - 从右到左 */
+@keyframes wipeRightToLeft {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* 百叶窗效果 */
+@keyframes blinds {
+  0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* 缩放过渡 */
+@keyframes zoomTransition {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==================== 工具类 ==================== */
+
+/* 入场动画类 */
+.anim-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+.anim-slide-up { animation: slideUp 0.5s ease-out forwards; }
+.anim-slide-down { animation: slideDown 0.5s ease-out forwards; }
+.anim-slide-left { animation: slideLeft 0.5s ease-out forwards; }
+.anim-slide-right { animation: slideRight 0.5s ease-out forwards; }
+.anim-scale-in { animation: scaleIn 0.4s ease-out forwards; }
+.anim-bounce-in { animation: bounceIn 0.6s ease-out forwards; }
+
+/* 魔法效果类 */
+.anim-sparkle { animation: sparkle 1s ease-in-out infinite; }
+.anim-pulse { animation: pulse 2s ease-in-out infinite; }
+.anim-glow { animation: glow 2s ease-in-out infinite; }
+.anim-rotate { animation: rotate 3s linear infinite; }
+.anim-float { animation: float 3s ease-in-out infinite; }
+
+/* 战斗动画类 */
+.anim-shake { animation: shake 0.5s ease-in-out; }
+.anim-flash { animation: flash 0.3s ease-in-out 3; }
+.anim-damage { animation: damageFlash 0.4s ease-in-out; }
+.anim-heal { animation: healGlow 0.8s ease-in-out; }
+
+/* 卡牌动画类 */
+.anim-card-draw { animation: cardDraw 0.5s ease-out forwards; }
+.anim-card-play { animation: cardPlay 0.4s ease-in forwards; }
+.anim-card-discard { animation: cardDiscard 0.3s ease-in forwards; }
+.anim-card-hover { animation: cardHover 2s ease-in-out infinite; }
+.anim-card-flip { animation: cardFlip 0.6s ease-in-out; }
+
+/* 场景转场类 */
+.anim-scene-fade { animation: sceneFade 0.8s ease-in-out; }
+.anim-scene-wipe { animation: wipeLeftToRight 1s ease-in-out; }
+.anim-scene-blinds { animation: blinds 0.8s ease-in-out; }
+.anim-scene-zoom { animation: zoomTransition 0.8s ease-in-out; }
+
+/* 文字动画类 */
+.anim-blink::after {
+  content: '▌';
+  animation: blink 0.8s step-end infinite;
+  color: currentColor;
+  margin-left: 2px;
+}
+
+.anim-shimmer {
+  background: linear-gradient(90deg, #fff 25%, #ffd700 50%, #fff 75%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* 动画延迟工具类 */
+.anim-delay-1 { animation-delay: 0.1s; }
+.anim-delay-2 { animation-delay: 0.2s; }
+.anim-delay-3 { animation-delay: 0.3s; }
+.anim-delay-4 { animation-delay: 0.4s; }
+.anim-delay-5 { animation-delay: 0.5s; }
+
+/* 淡出延迟工具类 */
+.anim-fade-out { animation: fadeOut 0.5s ease-in forwards; }
+
+/* ==================== GameScreen 专用动画 ==================== */
+
+/* 推进提示闪烁 */
+@keyframes gs-blink {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0; }
+}
+
+/* 角色精灵入场 - 左 */
+@keyframes gs-slideInLeft {
+  from { transform: translateX(-120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+/* 角色精灵入场 - 右 */
+@keyframes gs-slideInRight {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+/* 角色精灵入场 - 中 */
+@keyframes gs-slideInCenter {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* 角色精灵退场 - 左 */
+@keyframes gs-fadeOutLeft {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-120%); opacity: 0; }
+}
+/* 角色精灵退场 - 右 */
+@keyframes gs-fadeOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(120%); opacity: 0; }
+}
+/* 角色精灵退场 - 中 */
+@keyframes gs-fadeOutCenter {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(40px); opacity: 0; }
+}
+
+/* 角色晃动 */
+@keyframes gs-characterShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-4px); }
+  30%, 70% { transform: translateX(4px); }
+}
+/* 角色闪光 */
+@keyframes gs-characterFlash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(2); }
+  100% { filter: brightness(1); }
+}
+
+/* 选择按钮淡入 */
+@keyframes gs-choiceFadeIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* 战斗进入 */
+@keyframes gs-battleEnter {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+/* 过场淡入 */
+@keyframes gs-cutsceneFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* 菜单淡入 */
+@keyframes gs-menuFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* 菜单面板滑入 */
+@keyframes gs-menuPanelSlide {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* 场景切换 */
+@keyframes gs-sceneTransition {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* 心跳脉动 */
+@keyframes gs-heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+/* 发光脉动 */
+@keyframes gs-glowPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(100,60,200,0.2); }
+  50% { box-shadow: 0 0 20px rgba(100,60,200,0.4); }
+}
+
+/* 选项按钮悬停 */
+.choice-btn:hover {
+  background: linear-gradient(135deg, rgba(40,15,80,0.85) 0%, rgba(20,8,50,0.95) 100%) !important;
+  border-color: rgba(180,140,255,0.6) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(120,80,220,0.3) !important;
+}
+/* 战斗卡牌悬停 */
+.battle-card-btn:hover {
+  background: linear-gradient(135deg, rgba(60,15,15,0.9) 0%, rgba(30,8,8,0.95) 100%) !important;
+  border-color: rgba(255,120,120,0.6) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 25px rgba(255,80,80,0.25) !important;
+}
+/* 菜单项悬停 */
+.menu-item:hover {
+  background: linear-gradient(135deg, rgba(50,20,90,0.7) 0%, rgba(25,10,50,0.9) 100%) !important;
+  border-color: rgba(180,140,255,0.5) !important;
+  transform: translateX(4px) !important;
+}
+/* 菜单关闭按钮悬停 */
+.menu-close:hover {
+  background: linear-gradient(135deg, rgba(80,40,0,0.6) 0%, rgba(50,25,0,0.8) 100%) !important;
+  border-color: rgba(255,220,120,0.6) !important;
+  transform: scale(1.02) !important;
+}
+/* HUD按钮悬停 */
+.hud-btn:hover {
+  background: linear-gradient(135deg, rgba(30,10,60,0.8) 0%, rgba(15,5,40,0.9) 100%) !important;
+  border-color: rgba(180,140,255,0.5) !important;
+  color: rgba(240,220,255,1) !important;
+}
+
+/* Backlog 滚动条 */
+.backlog-scroll::-webkit-scrollbar { width: 6px; }
+.backlog-scroll::-webkit-scrollbar-track { background: rgba(120,80,220,0.08); border-radius: 3px; }
+.backlog-scroll::-webkit-scrollbar-thumb { background: rgba(160,120,255,0.3); border-radius: 3px; }
+.backlog-scroll::-webkit-scrollbar-thumb:hover { background: rgba(160,120,255,0.5); }
+.backlog-entry { animation: gs-backlogFadeIn 0.3s ease both; }
+@keyframes gs-backlogFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
