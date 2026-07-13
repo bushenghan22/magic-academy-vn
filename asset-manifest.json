@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/magic-academy-vn/static/css/main.ea81e981.css",
+    "main.js": "/magic-academy-vn/static/js/main.f9585a1f.js",
+    "index.html": "/magic-academy-vn/index.html",
+    "main.ea81e981.css.map": "/magic-academy-vn/static/css/main.ea81e981.css.map",
+    "main.f9585a1f.js.map": "/magic-academy-vn/static/js/main.f9585a1f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ea81e981.css",
+    "static/js/main.f9585a1f.js"
+  ]
+}
